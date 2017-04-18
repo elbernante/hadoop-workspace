@@ -41,12 +41,53 @@ echo "Installing Hadoop..."
 echo " "
 echo " "
 
-# hadoop_package=hadoop-2.8.0.tar.gz
-# if [[ ! -f $hadoop_pacakge ]]; then
-#     wget --quiet -O $hadoop_package http://mirror.symnds.com/software/Apache/hadoop/common/hadoop-2.8.0/hadoop-2.8.0.tar.gz
-# fi
 
-# tar -xvzf $hadoop_package
+# Download Hadoop package
+hadoop_package=hadoop.tar.gz
+if [[ ! -f $hadoop_pacakge ]]; then
+    wget --quiet -O $hadoop_package http://mirror.symnds.com/software/Apache/hadoop/common/hadoop-2.8.0/hadoop-2.8.0.tar.gz
+fi
+
+# Extract Hadoop package
+tar -xvzf $hadoop_package
+
+# Copy pre-setup config files
+cp hadoop-config-templates/* hadoop/etc/hadoop/
+
+
+# Create key to allow ssh without passphrase
+ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+chmod 0600 ~/.ssh/authorized_keys
+
+
+cd hadoop
+# Setup HDFS namenode
+bin/hdfs namenode -format
+
+# Start HDFS service
+sbin/start-dfs.sh
+
+# Create user directory in HDFS
+bin/hdfs dfs -mkdir /user
+bin/hdfs dfs -mkdir /user/vagrant
+
+# Stop HDFS service
+sbin/stop-dfs.sh
+
+# TODO: Create symlink to /usr/local/hadoop
+# TODO: update .bashrc
+
+sbin/stop-dfs.sh
+
+# Upate .bashrc to include hadoop
+echo "export HADOOP_HOME=\"/vagrant/hadoop\"" >> ~/.bashrc
+echo "export PATH=${PATH}:${HADOOP_HOME}/bin" >> ~/.bashrc
+echo "export JAVA_HOME=\"/usr/lib/jvm/java-8-oracle\"" >> ~/.bashrc 
+echo "export PATH=${JAVA_HOME}/bin:${PATH}" >> ~/.bashrc 
+echo "export HADOOP_CLASSPATH=${JAVA_HOME}/lib/tools.jar" >> ~/.bashrc  
+
+source ~/.bashrc
 
 # NOTE: Set JAVA_HOME evironment variable:
 #       you may not need this step if you already exprot JAVA_HOME in /etc/environment
@@ -54,23 +95,7 @@ echo " "
 # set: export JAVA_HOME="/usr/lib/jvm/java-8-oracle"
 
 
-# Install Scala
-echo " "
-echo " "
-echo "Installing Scala"
-echo " "
-echo " "
 
-# apt-get -y install scala
-
-
-# # Install Spark
-# spark_package=spark-2.1.0-bin-hadoop2.7.tgz
-# if [[ ! -f $hadoop_pacakge ]]; then
-#     wget --quiet -O $spark_package http://d3kbcqa49mib13.cloudfront.net/spark-2.1.0-bin-hadoop2.7.tgz
-# fi
-
-# tar -xvzf $spark_package
 
 
 echo " "
@@ -78,9 +103,7 @@ echo " "
 echo "==========================================="
 echo " "
 echo "Setup complete. Run 'vagrant ssh' to start."
-# echo "To access iPython Notebook from browser on host,"
-# echo "go to your notebooks folder and run:"
-# echo "ipython notebook --ip=0.0.0.0.0"
+
 
 
 
