@@ -36,7 +36,7 @@ Vagrant.configure(2) do |config|
   end
 
   # Install libraries
-  config.vm.provision "shell", path: "pg_config.sh"
+  config.vm.provision "shell", path: "box_config.sh"
   config.vm.provision "shell", path: "hadoop_hdfs_setup.sh", privileged: false
   config.vm.provision "shell", inline: "echo \"Setup complete. Run 'vagrant ssh' to start.\""
 end

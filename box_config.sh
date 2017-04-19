@@ -49,6 +49,7 @@ fi
 tar -xvzf $hadoop_package
 
 # Copy pre-setup config files
+sed -i "s/^export JAVA_HOME.*/export JAVA_HOME=\$(readlink -f \/usr\/bin\/javac | sed \"s:\/bin\/javac::\")/" ${hadoopp_dir}/etc/hadoop/hadoop-env.sh
 cp hadoop-config-templates/* ${hadoopp_dir}/etc/hadoop/
 
 # Create key to allow ssh without passphrase
@@ -62,7 +63,7 @@ chown ubuntu:ubuntu /home/ubuntu/.ssh/id_rsa.pub
 # Add localhost to known hosts
 ssh-keyscan localhost,0.0.0.0  > /home/ubuntu/.ssh/known_hosts
 chown ubuntu:ubuntu /home/ubuntu/.ssh/known_hosts
-# 
+
 # Create symlink
 ln -s /vagrant/${hadoopp_dir} /usr/local/hadoop
 
