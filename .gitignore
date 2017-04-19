@@ -13,3 +13,13 @@ hs_err_pid*
 
 # OS X
 .DS_Store
+
+.vagrant
+.vagrant/*
+
+hadoop-*.tar.gz
+hadoop*/*
+!hadoop-config-templates
+!hadoop-config-templates/*
+
+ubuntu*.log

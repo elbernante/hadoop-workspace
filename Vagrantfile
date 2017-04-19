@@ -13,7 +13,7 @@ def gui_enabled?
 end
 
 Vagrant.configure(2) do |config|
-  config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "ubuntu/xenial64"
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine.]
@@ -32,9 +32,11 @@ Vagrant.configure(2) do |config|
     vb.memory = "2048"
 
     # Set name
-    vb.name = "ubuntu_trusty64_hadoop"
+    vb.name = "ubuntu_xenial64_hadoop"
   end
 
   # Install libraries
   config.vm.provision "shell", path: "pg_config.sh"
+  config.vm.provision "shell", path: "hadoop_hdfs_setup.sh", privileged: false
+  config.vm.provision "shell", inline: "echo \"Setup complete. Run 'vagrant ssh' to start.\""
 end
