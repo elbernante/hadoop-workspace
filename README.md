@@ -88,8 +88,8 @@ The ouput files will be generated in `wordcount/output` in HDFS:
 $ hadoop fs -ls wordcount/output
 
 Found 2 items
--rw-r--r--   1 ubuntu supergroup    0 2017-04-19 20:21 wordcount/output/_SUCCESS
--rw-r--r--   1 ubuntu supergroup   41 2017-04-19 20:21 wordcount/output/part-r-00000
+-rw-r--r-- 1 ubuntu supergroup  0 2017-04-19 20:21 wordcount/output/_SUCCESS
+-rw-r--r-- 1 ubuntu supergroup 41 2017-04-19 20:21 wordcount/output/part-r-00000
 ```
 
 To view the contents of the output files:
