@@ -38,5 +38,6 @@ Vagrant.configure(2) do |config|
   # Install libraries
   config.vm.provision "shell", path: "box_config.sh"
   config.vm.provision "shell", path: "hadoop_hdfs_setup.sh", privileged: false
+  config.vm.provision "shell", inline: "bash /usr/local/hadoop/sbin/start-dfs.sh", privileged: false, run: "always"
   config.vm.provision "shell", inline: "echo \"Setup complete. Run 'vagrant ssh' to start.\""
 end
