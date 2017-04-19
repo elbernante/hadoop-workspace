@@ -70,8 +70,8 @@ You can verify that the input files are uploaded by running the command:
 $ hadoop fs -ls wordcount/input
 
 Found 2 items
--rw-r--r--   1 ubuntu supergroup         22 2017-04-19 19:10 wordcount/input/file01
--rw-r--r--   1 ubuntu supergroup         28 2017-04-19 19:10 wordcount/input/file02
+-rw-r--r--   1 ubuntu supergroup   22 2017-04-19 19:10 wordcount/input/file01
+-rw-r--r--   1 ubuntu supergroup   28 2017-04-19 19:10 wordcount/input/file02
 ```
 
 ##### Running the Application
@@ -88,8 +88,8 @@ The ouput files will be generated in `wordcount/output` in HDFS:
 $ hadoop fs -ls wordcount/output
 
 Found 2 items
--rw-r--r--   1 ubuntu supergroup          0 2017-04-19 20:21 wordcount/output/_SUCCESS
--rw-r--r--   1 ubuntu supergroup         41 2017-04-19 20:21 wordcount/output/part-r-00000
+-rw-r--r--   1 ubuntu supergroup    0 2017-04-19 20:21 wordcount/output/_SUCCESS
+-rw-r--r--   1 ubuntu supergroup   41 2017-04-19 20:21 wordcount/output/part-r-00000
 ```
 
 To view the contents of the output files:
