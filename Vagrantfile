@@ -23,6 +23,8 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 8088, host: 8088   # Hadoop YARN Resource Manager
   config.vm.network "forwarded_port", guest: 50030, host: 50030 # Hadoop Jobtracker history server
   config.vm.network "forwarded_port", guest: 50070, host: 50070 # Hadoop Name node
+  config.vm.network "forwarded_port", guest: 4040, host: 4040   # Spark UN Persist Storage
+  
 
   config.vm.provider "virtualbox" do |vb|
     # Display the VirtualBox GUI when booting the machine

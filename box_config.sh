@@ -48,7 +48,7 @@ fi
 # Extract Hadoop package
 tar -xvzf $hadoop_package
 
-# Copy pre-setup config files
+# Copy pre-configured configuration files
 sed -i "s/^export JAVA_HOME.*/export JAVA_HOME=\$(readlink -f \/usr\/bin\/javac | sed \"s:\/bin\/javac::\")/" ${hadoopp_dir}/etc/hadoop/hadoop-env.sh
 cp hadoop-config-templates/* ${hadoopp_dir}/etc/hadoop/
 
@@ -64,8 +64,15 @@ chown ubuntu:ubuntu /home/ubuntu/.ssh/id_rsa.pub
 ssh-keyscan localhost,0.0.0.0  > /home/ubuntu/.ssh/known_hosts
 chown ubuntu:ubuntu /home/ubuntu/.ssh/known_hosts
 
-# Create symlink
+# Create symbolic link to hadoop installation
 ln -s /vagrant/${hadoopp_dir} /usr/local/hadoop
+
+# Create directory for HDFS
+mkdir /dfs
+mkdir /dfs/nn
+mkdir /dfs/data
+chown -R ubuntu:ubuntu /dfs
+chmod -R 775 /dfs
 
 # Upate .bashrc to include hadoop
 echo "export HADOOP_HOME=\"/usr/local/hadoop\"" >> /home/ubuntu/.bashrc
@@ -73,5 +80,42 @@ echo "export PATH=\${PATH}:\${HADOOP_HOME}/bin" >> /home/ubuntu/.bashrc
 echo "export JAVA_HOME=\$(readlink -f /usr/bin/javac | sed \"s:/bin/javac::\")" >> /home/ubuntu/.bashrc
 echo "export PATH=\${JAVA_HOME}/bin:\${PATH}" >> /home/ubuntu/.bashrc
 echo "export HADOOP_CLASSPATH=\${JAVA_HOME}/lib/tools.jar" >> /home/ubuntu/.bashrc
+
+
+# Install Scala
+echo " "
+echo " "
+echo "Installing Scala"
+echo " "
+echo " "
+apt-get -y install scala
+
+
+# Install Apache Spark
+echo " "
+echo " "
+echo "Installing Apache Spark"
+echo " "
+echo " "
+
+# Download Spark package without Hadoop
+spark_dir=spark-2.1.0-bin-without-hadoop
+spark_package=${spark_dir}.tgz
+if [[ ! -f $spark_package ]]; then
+    echo "Downloading Apache spark distribution package..."
+    wget --quiet -O $spark_package http://d3kbcqa49mib13.cloudfront.net/spark-2.1.0-bin-without-hadoop.tgz
+fi
+
+# Extract spark package
+tar -xvzf $spark_package
+
+# Create symbolik link to spark intallation
+ln -s /vagrant/${spark_dir} /usr/local/spark
+
+# Copy pre-configured configuration files
+cp spark-config-templates/* ${spark_dir}/conf
+
+# Update PATH to include spark
+echo "export PATH=\${PATH}:/usr/local/spark/bin" >> /home/ubuntu/.bashrc
 
 source /home/ubuntu/.bashrc
