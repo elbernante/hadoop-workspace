@@ -10,6 +10,14 @@ apt-get -y install python-pip
 vagrantTip="[35m[1mThe shared directory is located at /vagrant\nTo access your shared files: cd /vagrant(B[m"
 echo -e $vagrantTip > /etc/motd
 
+# Create directory for installation destinations
+VAGRANT_LOCAL=/vagrant/local
+mkdir -p ${VAGRANT_LOCAL}
+
+# Empty installation destinations in case it was already created
+rm -rf ${VAGRANT_LOCAL}/*
+
+
 # Save donwloadables in shared folder
 cd /vagrant
 
@@ -44,19 +52,20 @@ if [[ ! -f $hadoop_package ]]; then
 fi
 
 # Extract Hadoop package
-HADOOP_TMP_INSTALL=/tmp/hadoop-install
-mkdir ${HADOOP_TMP_INSTALL}
-tar -xvzf $hadoop_package -C ${HADOOP_TMP_INSTALL}
+tar -xvzf $hadoop_package -C ${VAGRANT_LOCAL}
 
 # Copy pre-configured configuration files
-HADOOP_ENV_SH=${HADOOP_TMP_INSTALL}/${hadoopp_dir}/etc/hadoop/hadoop-env.sh
+HADOOP_ENV_SH=${VAGRANT_LOCAL}/${hadoopp_dir}/etc/hadoop/hadoop-env.sh
 sed -i "s/^export JAVA_HOME.*/export JAVA_HOME=\$(readlink -f \/usr\/bin\/javac | sed \"s:\/bin\/javac::\")/" ${HADOOP_ENV_SH}
-cp hadoop-config-templates/* ${HADOOP_TMP_INSTALL}/${hadoopp_dir}/etc/hadoop/
+cp hadoop-config-templates/* ${VAGRANT_LOCAL}/${hadoopp_dir}/etc/hadoop/
 
 # Move hadoop installation to /usr/local
-mv ${HADOOP_TMP_INSTALL}/${hadoopp_dir} /usr/local/hadoop
-chown -R ubuntu:ubuntu /usr/local/hadoop
-rmdir ${HADOOP_TMP_INSTALL}
+# mv ${HADOOP_TMP_INSTALL}/${hadoopp_dir} /usr/local/hadoop
+# chown -R ubuntu:ubuntu /usr/local/hadoop
+# rmdir ${HADOOP_TMP_INSTALL}
+
+# Create symbolic link to /usr/local
+ln -s ${VAGRANT_LOCAL}/${hadoopp_dir} /usr/local/hadoop
 
 # Create key to allow ssh without passphrase
 ssh-keygen -t rsa -P '' -f /home/ubuntu/.ssh/id_rsa
@@ -71,11 +80,11 @@ ssh-keyscan localhost,0.0.0.0  > /home/ubuntu/.ssh/known_hosts
 chown ubuntu:ubuntu /home/ubuntu/.ssh/known_hosts
 
 # Create directory for HDFS
-mkdir /dfs
-mkdir /dfs/nn
-mkdir /dfs/data
-chown -R ubuntu:ubuntu /dfs
-chmod -R 775 /dfs
+mkdir ${VAGRANT_LOCAL}/hdfs
+mkdir ${VAGRANT_LOCAL}/hdfs/nn
+mkdir ${VAGRANT_LOCAL}/hdfs/data
+chown -R ubuntu:ubuntu ${VAGRANT_LOCAL}/hdfs
+chmod -R 775 ${VAGRANT_LOCAL}/hdfs
 
 # Upate .bashrc to include hadoop
 echo "export HADOOP_HOME=\"/usr/local/hadoop\"" >> /home/ubuntu/.bashrc
@@ -110,17 +119,21 @@ if [[ ! -f $spark_package ]]; then
 fi
 
 # Extract spark package
-SPARK_TMP_INSTALL=/tmp/spark-install
-mkdir ${SPARK_TMP_INSTALL}
-tar -xvzf $spark_package -C ${SPARK_TMP_INSTALL}
+# SPARK_TMP_INSTALL=/tmp/spark-install
+# mkdir ${SPARK_TMP_INSTALL}
+# tar -xvzf $spark_package -C ${SPARK_TMP_INSTALL}
+tar -xvzf $spark_package -C ${VAGRANT_LOCAL}
 
 # Copy pre-configured configuration files
-cp spark-config-templates/* ${SPARK_TMP_INSTALL}/${spark_dir}/conf
+cp spark-config-templates/* ${VAGRANT_LOCAL}/${spark_dir}/conf
 
 # Move spark installation to /usr/local
-mv ${SPARK_TMP_INSTALL}/${spark_dir} /usr/local/spark
-chown -R ubuntu:ubuntu /usr/local/spark
-rmdir ${SPARK_TMP_INSTALL}
+# mv ${SPARK_TMP_INSTALL}/${spark_dir} /usr/local/spark
+# chown -R ubuntu:ubuntu /usr/local/spark
+# rmdir ${SPARK_TMP_INSTALL}
+
+# Create symbolic link to /usr/local
+ln -s ${VAGRANT_LOCAL}/${spark_dir} /usr/local/spark
 
 # Update PATH to include spark
 echo "export PATH=\${PATH}:/usr/local/spark/bin" >> /home/ubuntu/.bashrc

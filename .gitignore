@@ -17,6 +17,9 @@ hs_err_pid*
 .vagrant
 .vagrant/*
 
+local
+local/*
+
 hadoop-*.tar.gz
 hadoop*/*
 !hadoop-config-templates
