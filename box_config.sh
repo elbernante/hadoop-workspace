@@ -11,7 +11,7 @@ vagrantTip="[35m[1mThe shared directory is located at /vagrant\nTo access your
 echo -e $vagrantTip > /etc/motd
 
 # Create directory for installation destinations
-VAGRANT_LOCAL=/vagrant/local
+VAGRANT_LOCAL=/vagrant/_local
 mkdir -p ${VAGRANT_LOCAL}
 
 # Empty installation destinations in case it was already created
