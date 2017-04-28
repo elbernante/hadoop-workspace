@@ -59,11 +59,6 @@ HADOOP_ENV_SH=${VAGRANT_LOCAL}/${hadoopp_dir}/etc/hadoop/hadoop-env.sh
 sed -i "s/^export JAVA_HOME.*/export JAVA_HOME=\$(readlink -f \/usr\/bin\/javac | sed \"s:\/bin\/javac::\")/" ${HADOOP_ENV_SH}
 cp hadoop-config-templates/* ${VAGRANT_LOCAL}/${hadoopp_dir}/etc/hadoop/
 
-# Move hadoop installation to /usr/local
-# mv ${HADOOP_TMP_INSTALL}/${hadoopp_dir} /usr/local/hadoop
-# chown -R ubuntu:ubuntu /usr/local/hadoop
-# rmdir ${HADOOP_TMP_INSTALL}
-
 # Create symbolic link to /usr/local
 ln -s ${VAGRANT_LOCAL}/${hadoopp_dir} /usr/local/hadoop
 
@@ -119,18 +114,10 @@ if [[ ! -f $spark_package ]]; then
 fi
 
 # Extract spark package
-# SPARK_TMP_INSTALL=/tmp/spark-install
-# mkdir ${SPARK_TMP_INSTALL}
-# tar -xvzf $spark_package -C ${SPARK_TMP_INSTALL}
 tar -xvzf $spark_package -C ${VAGRANT_LOCAL}
 
 # Copy pre-configured configuration files
 cp spark-config-templates/* ${VAGRANT_LOCAL}/${spark_dir}/conf
-
-# Move spark installation to /usr/local
-# mv ${SPARK_TMP_INSTALL}/${spark_dir} /usr/local/spark
-# chown -R ubuntu:ubuntu /usr/local/spark
-# rmdir ${SPARK_TMP_INSTALL}
 
 # Create symbolic link to /usr/local
 ln -s ${VAGRANT_LOCAL}/${spark_dir} /usr/local/spark
