@@ -17,12 +17,14 @@ hs_err_pid*
 .vagrant
 .vagrant/*
 
-local
-local/*
+_local
+_local/*
 
 hadoop-*.tar.gz
 hadoop*/*
 !hadoop-config-templates
 !hadoop-config-templates/*
+
+spark*.tgz
 
 ubuntu*.log
